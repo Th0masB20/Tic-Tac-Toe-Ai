@@ -13,6 +13,8 @@ class Game():
         self.game_window = game_window
         self.restart_button = Button(text='Restart', width=10, height=2, command=self.restart_game)
         self.restart_button.pack();
+        self.label = Label(font=(26))
+        self.label.pack()
         self.frame = Frame()
         self.frame.pack()
         self.createBoard();
@@ -25,8 +27,6 @@ class Game():
         self.human_player_value = int(not self.opponent_player_value)
         self.current_player = self.human_player_value
         self.opponent = Player_AI(self.opponent_player_value, self.human_player_value, self)
-        print(self.opponent_player_value)
-        print(self.human_player_value)
         
     def createBoard(self):
         self.board = np.array([['','',''],
@@ -36,7 +36,7 @@ class Game():
         
         for x in range(3):
             for y in range(3):
-                self.button_arr[x][y] = Button(self.frame, text="", width=23, height=10, command=lambda row=x, col=y: self.player_move(row, col))
+                self.button_arr[x][y] = Button(self.frame, text="", width=8, height=4, font=('times', 20),command=lambda row=x, col=y: self.player_move(row, col))
                 self.button_arr[x][y].grid(row=x, column=y)
     
     def player_move(self,row, col):  
@@ -47,21 +47,8 @@ class Game():
             player_played = True
         
         if(player_played):
-            if self.check_win(self.board) == 1:
-                self.stop_game()
-                print('X won')
-            elif self.check_win(self.board) == -1:
-                self.stop_game()
-                print('O won')
-            elif self.full_board(self.board):
-                self.stop_game()
-                print('Tied')     
-            else:
-                self.current_player = not self.current_player
-                self.ai_move()
-            
-        
-        
+            self.check_winnier()
+            self.ai_move()
         
     def ai_move(self):
         initial_move = True
@@ -79,15 +66,18 @@ class Game():
             for y in range(3):
                 self.button_arr[x][y]['text'] = self.board[x][y]
         
+        self.check_winnier()
+    
+    def check_winnier(self):
         if self.check_win(self.board) == 1:
             self.stop_game()
-            print('X won')
+            self.label['text'] = 'X won'
         elif self.check_win(self.board) == -1:
             self.stop_game()
-            print('O won')
+            self.label['text'] = 'O won'
         elif self.full_board(self.board):
             self.stop_game()
-            print('Tied')
+            self.label['text'] = 'Tied'
         else:
             self.current_player = not self.current_player
             

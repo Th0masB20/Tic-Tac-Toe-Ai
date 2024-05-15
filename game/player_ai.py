@@ -43,7 +43,6 @@ class Player_AI():
         min_value = np.inf 
 
         if self.game.is_game_over(board_state):
-            print(board_state)
             return self.game.check_win(board_state)
                 
         for x in range(3):
