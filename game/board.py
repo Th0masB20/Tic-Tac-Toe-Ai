@@ -47,13 +47,16 @@ class Game():
             player_played = True
         
         if(player_played):
+            #check if player won
             self.check_winnier()
             self.ai_move()
+            #check if ai won
+            self.check_winnier()
+
         
     def ai_move(self):
         initial_move = True
-        if len(self.board[self.board == self.players[self.opponent_player_value]]) != 0: initial_move = False
-        
+        if len(self.board[self.board == self.players[self.opponent_player_value]]) != 0: initial_move = False        
         if not initial_move:
             next_state = self.opponent.run_ai()
             self.board = next_state
@@ -65,9 +68,7 @@ class Game():
         for x in range(3):
             for y in range(3):
                 self.button_arr[x][y]['text'] = self.board[x][y]
-        
-        self.check_winnier()
-    
+            
     def check_winnier(self):
         if self.check_win(self.board) == 1:
             self.stop_game()
@@ -83,35 +84,38 @@ class Game():
             
     def check_win(self, board) -> int:
         player_who_won = ''
-        
+        #check horizontally
         for row in range(3):
             for col in range(3):
-                if board[row][0] != board[row][col]:
+                if not board[row][0] or board[row][0] != board[row][col]:
                     break
             else:
                 player_who_won = board[row][0]
 
-            
-        for col in range(3):
-            for row in range(3):
-                if board[0][col] != board[row][col]:
+        
+        if(not player_who_won):
+            for col in range(3):
+                for row in range(3):
+                    if not board[0][col] or board[0][col] != board[row][col]:
+                        break
+                else: 
+                    player_who_won = board[0][col]
+           
+        if(not player_who_won): 
+            for val in range(3):
+                if not board[0][col] or board[0][0] != board[val][val]:
                     break
-            else: 
-                player_who_won = board[0][col]
-            
-        for val in range(3):
-            if board[0][0] != board[val][val]:
-                break
-        else:
-            player_who_won = board[0][0]
-            
-        for val in range(3):
-            if board[0][2] != board[val][ (val - 2) * -1]:
-                break
-        else:
-            player_who_won = board[0][2]
+            else:
+                player_who_won = board[0][0]
+        
+        if(not player_who_won):  
+            for val in range(3):
+                if not board[0][2] or board[0][2] != board[val][ (val - 2) * -1]:
+                    break
+            else:
+                player_who_won = board[0][2]
                 
-                
+        
         if player_who_won == self.players[1]: return 1
         elif player_who_won == self.players[0]: return -1
         else: return 0
@@ -122,6 +126,7 @@ class Game():
                 self.button_arr[x][y]['state'] = 'disabled'
     
     def restart_game(self):
+        self.label['text'] = ""
         for x in range(3):
             for y in range(3):
                 self.board[x][y] = ''
