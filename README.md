@@ -1,2 +1,7 @@
-# Tic-Tac-Toe-Ai
-Tic Tac Toe game with ai player
+# Tic-Tac-Toe Game
+Play Tic Tac Toe against an AI player
+
+**Algorithm**
+AI built on minimax algorithm to choose the next best move 
+
+
